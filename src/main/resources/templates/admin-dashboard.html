@@ -1,0 +1,44 @@
+<!--
+/adminDashboard
+
+i/o - List<StudentDTO>
+    - List<FacultyDTO>
+
+AccountService
+    List<StudentDTO> getStudentsPending();
+    List<FacultyDTO> getFacultyPending();
+
+    boolean isAccountPresent(String username);
+    boolean acceptAccount(String username);
+    boolean rejectAccount(String username);
+-->
+<!--
+Display List -
+    For each student registration
+        String Username
+        String First Name
+        String Last Name
+        enum Department Department
+        Integer Semester
+        Character Section
+
+        Button -
+            Accept - POST /adminDashboard/{username}/accept
+            Reject - POST /adminDashboard/{username}/reject
+                     REDIRECT /adminDashboard
+
+    For each faculty registration
+        String Username
+        String First Name
+        String Last Name
+        enum Department Department
+        String Domain
+
+        Button -
+            Accept - POST /adminDashboard/{username}/accept
+            Reject - POST /adminDashboard/{username}/reject
+                     REDIRECT /adminDashboard
+
+Links -
+    Logout - POST /logout
+-->

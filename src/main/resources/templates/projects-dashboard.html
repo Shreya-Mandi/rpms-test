@@ -1,0 +1,29 @@
+<!--
+/projects
+
+i/o - List<ProjectDTO>
+
+ProjectService
+    List<ProjectDTO> getProjects();
+    List<ProjectDTO> getProjects(String username);
+-->
+<!--
+Display List -
+    (if guest, only published projects)
+    (if not guest, ongoing projects which user works in)
+    For each project
+        String Title
+        Date Start Date
+        Date End Date (if not empty)
+        enum Status Status
+
+        Button -
+            View Details - GET /project/{projectId}
+
+Button -
+    Create Project - GET /project/create
+
+Links -
+    Login - GET /login (if guest)
+    Logout - POST /logout (if not guest)
+-->

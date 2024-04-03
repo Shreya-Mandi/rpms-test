@@ -1,0 +1,35 @@
+<!--
+/project/create
+
+i/o - ProjectDTO
+    - List<String> Student Usernames (needs to be validated)
+    - List<String> Faculty Usernames (needs to be validated)
+
+ProjectService
+    boolean saveProject(ProjectDTO projectDTO, List<String> studentUsernames, List<String> facultyUsernames);
+
+AccountService
+    boolean isStudent(String username);
+    boolean isFaculty(String username);
+-->
+<!--
+Form Input -
+    String Title
+    Date Start Date
+    Date End Date (optional)
+    enum Status Status
+
+    List<String> Student Usernames (One of these must include the user)
+    List<String> Faculty Usernames
+
+    Button -
+        Submit - POST /project/create
+                 REDIRECT /projects
+
+Links -
+    Projects Dashboard - GET /projects
+-->
+<!--
+For each field (except department):
+    th:if="${#fields.hasErrors('<field>')}" th:errors="*{<field>}"
+-->

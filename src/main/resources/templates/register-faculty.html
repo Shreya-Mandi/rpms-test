@@ -1,0 +1,30 @@
+<!--
+/registerFaculty
+
+i/o - RegistrationFacultyDTO faculty
+
+AccountService
+    boolean isAccountNotPresent(String username);
+    boolean saveAccount(RegistrationFacultyDTO registrationFacultyDTO);
+-->
+<!--
+Form Input -
+    String Username
+    String Password
+    String First Name
+    String Last Name
+    enum Department Department (dropbox)
+    String Domain
+
+    Button -
+        Register - POST /registerFaculty
+                 - REDIRECT /login?registered
+
+Links -
+    Login - GET /login
+    Register Student - GET /registerStudent
+-->
+<!--
+For each field (except department):
+    th:if="${#fields.hasErrors('<field>')}" th:errors="*{<field>}"
+-->

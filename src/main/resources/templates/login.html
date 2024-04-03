@@ -1,0 +1,28 @@
+<!--
+/login
+
+i/o taken care of by spring security
+
+refer to spring security tutorial
+https://spring.io/guides/gs/securing-web
+-->
+<!--
+Form Input -
+    String Username
+    String Password
+
+    Button -
+        Sign In - POST /login
+                - REDIRECT /projects (if student or faculty)
+                - REDIRECT /adminDashboard (if admin)
+
+Button -
+    Login as Guest - GET /projects
+    Register Student - GET /registerStudent
+    Register Faculty - GET /registerFaculty
+-->
+<!--
+param.registered - You have successfully registered, try logging later
+param.error - Invalid username and password
+param.logout - You have been logged out
+-->

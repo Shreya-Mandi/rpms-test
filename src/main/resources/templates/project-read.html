@@ -1,0 +1,55 @@
+<!--
+/project/{projectId}
+
+i   - ProjectDTO
+    - List<String> Student Names
+    - List<String> Faculty Names
+    - List<MessageDTO> Messages
+
+o   - String (needs to be validated - not blank)
+
+ProjectService
+    boolean isProjectPresent(Integer projectId);
+    List<String> getStudentNames(Integer projectId);
+    List<String> getFacultyNames(Integer projectId);
+
+    boolean deleteProject(Integer projectId);
+
+    boolean isAccountInProject(String username, Integer projectId);
+
+MessageService
+    List<MessageDTO> getMessages(Integer projectId);
+    boolean addMessage(String username, Integer projectID, String content);
+-->
+<!--
+Display -
+    (project ID needs to be included)
+    String Title
+    Date Start Date
+    Date End Date (if not empty)
+    enum Status Status
+
+    List<String> Student Names
+    List<String> Faculty Names
+
+(if not guest)
+
+    For Each Message (order by timestamp asc):
+        String Name
+        String Content
+        String Timestamp
+
+Form Input -
+    String Content (needs to be validated)
+
+    Button -
+        Send - POST /project/{projectId}/addMessage
+               REDIRECT /project/{projectId}
+
+Button -
+    Update Project - GET /project/{projectId}/update
+    Delete Project - GET /project/{projectId}/delete
+
+Links -
+    Projects Dashboard - GET /projects
+-->
