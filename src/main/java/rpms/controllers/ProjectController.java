@@ -68,8 +68,8 @@ public class ProjectController {
         if (!projectService.isProjectPresent(projectId)) {
             return "error-404"; // FIXME - we dont have this
         }
-        Project project = projectService.getProject(projectId); // TODO, USE ONLY THOSE FIELDS WHICH ARE IN PROJECT_DTO IN HTML FILE
-        model.addAttribute("projectDTO", project);
+        ProjectDTO projectDTO = projectService.getProject(projectId);
+        model.addAttribute("projectDTO", projectDTO);
         model.addAttribute("studentUsernames", projectService.getStudentNames(projectId));
         model.addAttribute("facultyUsernames", projectService.getFacultyNames(projectId));
         return "project-update";
