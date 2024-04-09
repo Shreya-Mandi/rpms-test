@@ -113,7 +113,7 @@ public class AccountServiceImplementation implements AccountService {
     }
 
     @Override
-    public Account getAccount(String username) {
+    public Account getAccountRaw(String username) {
         try {
             Optional<Account> accountOptional = accountRepository.findById(username);
             return accountOptional.orElse(null);

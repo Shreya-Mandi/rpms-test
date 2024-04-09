@@ -99,14 +99,28 @@ public class ProjectServiceImplementation implements ProjectService {
     }
 
     @Override
-    public Project getProject(Integer projectId) {
+    public ProjectDTO getProject(Integer projectId) {
+        try {
+            Optional<Project> projectOptional = projectRepository.findById(projectId);
+            return projectOptional.map(ProjectMapper::mapProjectToProjectDTO).orElse(null);
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("ProjectServiceImplementation.class");
+            System.out.println("ProjectDTO getProject(Integer)");
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Project getProjectRaw(Integer projectId) {
         try {
             Optional<Project> projectOptional = projectRepository.findById(projectId);
             return projectOptional.orElse(null);
         } catch (Exception e) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectServiceImplementation.class");
-            System.out.println("Project getProject(Integer)");
+            System.out.println("Project getProjectRaw(Integer)");
             System.out.println(e.getMessage());
             return null;
         }

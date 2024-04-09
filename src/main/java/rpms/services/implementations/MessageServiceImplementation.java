@@ -45,12 +45,12 @@ public class MessageServiceImplementation implements MessageService {
         try {
             Message message = new Message();
             if (projectService.isProjectPresent(projectID)) {
-                message.setProject(projectService.getProject(projectID));
+                message.setProject(projectService.getProjectRaw(projectID));
             } else {
                 return false;
             }
             if (accountService.isAccountPresent(username)) {
-                message.setAccount(accountService.getAccount(username));
+                message.setAccount(accountService.getAccountRaw(username));
             } else {
                 return false;
             }
