@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/login", "/registerStudent", "/registerFaculty", "/projects").hasAuthority("ROLE_ANONYMOUS") // add css, js? TODO
-                        .requestMatchers("/projects/**").hasAnyAuthority("STUDENT", "FACULTY")
+                        .requestMatchers("/project/**").hasAnyAuthority("STUDENT", "FACULTY")
                         .requestMatchers("/adminDashboard/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
