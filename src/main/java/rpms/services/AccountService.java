@@ -38,7 +38,7 @@ public interface AccountService extends UserDetailsService {
 
     boolean isFaculty(String username);
 
-    Account getAccount(String username);
+    Account getAccountRaw(String username);
 
     boolean saveAccount(RegistrationStudentDTO registrationStudentDTO);
 

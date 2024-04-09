@@ -15,7 +15,9 @@ public interface ProjectService {
 
     boolean isProjectPresent(Integer projectId);
 
-    Project getProject(Integer projectId);
+    ProjectDTO getProject(Integer projectId);
+
+    Project getProjectRaw(Integer projectId);
 
     List<String> getStudentNames(Integer projectId);
 
