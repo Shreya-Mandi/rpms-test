@@ -1,0 +1,94 @@
+<!--
+/project/create
+
+i/o - ProjectDTO
+    - List<String> Student Usernames (needs to be validated)
+    - List<String> Faculty Usernames (needs to be validated)
+
+ProjectService
+    boolean saveProject(ProjectDTO projectDTO, List<String> studentUsernames, List<String> facultyUsernames);
+
+AccountService
+    boolean isStudent(String username);
+    boolean isFaculty(String username);
+-->
+<!--
+Form Input -
+    String Title
+    Date Start Date
+    Date End Date (optional)
+    enum Status Status
+
+    List<String> Student Usernames (One of these must include the user)
+    List<String> Faculty Usernames
+
+    Button -
+        Submit - POST /project/create
+                 REDIRECT /projects
+
+Links -
+    Projects Dashboard - GET /projects
+-->
+<!--
+For each field (except department):
+    th:if="${#fields.hasErrors('<field>')}" th:errors="*{<field>}"
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Project Create</title>
+</head>
+<body>
+<div>
+    Welcome!
+</div>
+<div>
+    <form th:action="@{/project/create}" method="post" th:object="${projectDTO}">
+        <h1 th:text="${projectDTO.title}">Project Title</h1>
+        <div>
+            <strong>Start Date:</strong> <span th:text="${projectDTO.startDate}">Start Date</span>
+        </div>
+        <div th:if="${projectDTO.endDate != null}">
+            <strong>End Date:</strong> <span th:text="${projectDTO.endDate}">End Date</span>
+        </div>
+        <div>
+            <strong>Status:</strong> <span th:text="${projectDTO.status}">Status</span>
+        </div>
+        <div>
+            <h2>Student Names</h2>
+            <ul>
+                <li th:each="student : ${studentNames}" th:text="${student}">Student Name</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Faculty Names</h2>
+            <ul>
+                <li th:each="faculty : ${facultyNames}" th:text="${faculty}">Faculty Name</li>
+            </ul>
+        </div>
+        <div th:if="${!#lists.isEmpty(messages)}">
+            <h2>Messages</h2>
+            <div th:each="message : ${messages}">
+                <p><strong th:text="${message.name}">Name</strong>: <span th:text="${message.content}">Content</span> <i th:text="${message.timestamp}">Timestamp</i></p>
+            </div>
+        </div>
+        <div>
+            <form th:action="@{/project/{projectId}/addMessage(projectId=${projectDTO.id})}" method="post">
+                <input type="text" name="content" required placeholder="Enter your message here">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        <div>
+            <a th:href="@{/project/{projectId}/update(projectId=${projectDTO.id})}">Update Project</a>
+            <a th:href="@{/project/{projectId}/delete(projectId=${projectDTO.id})}">Delete Project</a>
+        </div>
+        <div>
+            <a th:href="@{/projects}">Projects Dashboard</a>
+        </div>
+        <button type="submit" name="createProject" value="createProject">Create Project</button>
+    </form>
+</div>
+</body>
+</html>

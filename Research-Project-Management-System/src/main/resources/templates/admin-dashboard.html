@@ -1,0 +1,100 @@
+<!--
+/adminDashboard
+
+i/o - List<StudentDTO>
+    - List<FacultyDTO>
+
+AccountService
+    List<StudentDTO> getStudentsPending();
+    List<FacultyDTO> getFacultyPending();
+
+    boolean isAccountPresent(String username);
+    boolean acceptAccount(String username);
+    boolean rejectAccount(String username);
+-->
+<!--
+Display List -
+    For each student registration
+        String Username
+        String First Name
+        String Last Name
+        enum Department Department
+        Integer Semester
+        Character Section
+
+        Button -
+            Accept - POST /adminDashboard/{username}/accept
+            Reject - POST /adminDashboard/{username}/reject
+                     REDIRECT /adminDashboard
+
+    For each faculty registration
+        String Username
+        String First Name
+        String Last Name
+        enum Department Department
+        String Domain
+
+        Button -
+            Accept - POST /adminDashboard/{username}/accept
+            Reject - POST /adminDashboard/{username}/reject
+                     REDIRECT /adminDashboard
+
+Links -
+    Logout - POST /logout
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<div>
+    <form>
+        <div  th:object="${studentDTOList}">
+            <div>
+                <h1>Students</h1>>
+            </div>
+            <div th:each="student : ${studentDTOList}">
+                <h6 th:text="${student.username}"/>
+                <h6 th:text="${student.firstName}"/>
+                <h6 th:text="${student.lastName}"/>
+                <h6 th:text="${student.department}"/>
+                <h6 th:text="${student.semester}"/>
+                <h6 th:text="${student.sectioni}"/>
+                <button type="submit" name="accept" value="accept" th:action="@{/adminDashboard/{student.username}/accept}"
+                        method="post">Accept
+                </button>
+                <button type="submit" name="reject" value="reject" th:action="@{/adminDashboard/{student.username}/reject}"
+                        method="post">Reject
+                </button>
+            </div>
+        </div>
+
+        <div  th:object="${facultyDTOList}">
+            <div>
+                <h1>Students</h1>>
+            </div>
+            <div th:each="faculty : ${facultyDTOList}">
+                <h6 th:text="${faculty.username}"/>
+                <h6 th:text="${faculty.firstName}"/>
+                <h6 th:text="${faculty.lastName}"/>
+                <h6 th:text="${faculty.department}"/>
+                <h6 th:text="${faculty.domain}"/>
+                <button type="submit" name="accept" value="accept" th:action="@{/adminDashboard/{faculty.username}/accept}"
+                        method="post">Accept
+                </button>
+                <button type="submit" name="reject" value="reject" th:action="@{/adminDashboard/{faculty.username}/reject}"
+                        method="post">Reject
+                </button>
+            </div>
+        </div>
+
+</form>
+    <div>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+</div>
+</body>
+</html>
