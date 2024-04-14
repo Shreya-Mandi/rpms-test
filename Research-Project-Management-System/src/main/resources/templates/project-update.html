@@ -39,3 +39,53 @@ Links -
 For each field (except department):
     th:if="${#fields.hasErrors('<field>')}" th:errors="*{<field>}"
 -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Project</title>
+</head>
+<body>
+<h1>Update Project</h1>
+<form th:action="@{/project/{projectId}/update(projectId=${projectDTO.id})}" th:object="${projectDTO}" method="post">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" th:value="*{title}" required/>
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</div>
+    </div>
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" th:value="*{startDate}" required/>
+        <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">Start Date Error</div>
+    </div>
+    <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" th:value="*{endDate}"/>
+        <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">End Date Error</div>
+    </div>
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" name="status" th:value="*{status}">
+            <option value="PLANNED">Planned</option>
+            <option value="ONGOING">Ongoing</option>
+        </select>
+        <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Status Error</div>
+    </div>
+    <div>
+        <label for="studentUsernames">Student Usernames:</label>
+        <textarea id="studentUsernames" name="studentUsernames" th:text="*{studentUsernames}" required></textarea>
+        <div th:if="${#fields.hasErrors('studentUsernames')}" th:errors="*{studentUsernames}">Student Usernames Error</div>
+    </div>
+    <div>
+        <label for="facultyUsernames">Faculty Usernames:</label>
+        <textarea id="facultyUsernames" name="facultyUsernames" th:text="*{facultyUsernames}" required></textarea>
+        <div th:if="${#fields.hasErrors('facultyUsernames')}" th:errors="*{facultyUsernames}">Faculty Usernames Error</div>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+<a th:href="@{/project/{projectId}(projectId=${projectDTO.id})}">Back to Project Details</a>
+</body>
+</html>
