@@ -4,6 +4,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import rpms.models.enums.Status;
 
 import java.util.Date;
@@ -16,8 +17,10 @@ public class ProjectDTO {
     private String title;
 
     @NotNull(message = "Start Date cannot be empty")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @NotNull(message = "Status cannot be empty")

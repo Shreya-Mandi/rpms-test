@@ -1,7 +1,7 @@
 <!--
 /registerStudent
 
-i/o - RegistrationStudentDTO student
+i/o - RegistrationStudentDTO registrationStudentDTO
 
 AccountService
     boolean isAccountNotPresent(String username);
@@ -29,3 +29,70 @@ Links -
 For each field (except department):
     th:if="${#fields.hasErrors('<field>')}" th:errors="*{<field>}"
 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Student</title>
+</head>
+<body>
+<div>
+    <h1>Register Student</h1>
+    <form th:action="@{/registerStudent}" method="post">
+        <div>
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" th:field="*{registrationStudentDTO.username}" required>
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.username')}"
+                     th:errors="*{registrationStudentDTO.username}"></div>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" th:field="*{registrationStudentDTO.password}" required>
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.password')}"
+                     th:errors="*{registrationStudentDTO.password}"></div>
+            </div>
+            <div>
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" th:field="*{registrationStudentDTO.firstName}">
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.firstName')}"
+                     th:errors="*{registrationStudentDTO.firstName}"></div>
+            </div>
+            <div>
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" th:field="*{registrationStudentDTO.lastName}">
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.lastName')}"
+                     th:errors="*{registrationStudentDTO.lastName}"></div>
+            </div>
+            <div>
+                <label for="department">Department:</label>
+                <select id="department" th:field="*{registrationStudentDTO.department}" required>
+                    <option th:each="status : ${T(rpms.models.enums.Department).values()}"
+                            th:value="${status}" th:text="${status}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="semester">Semester:</label>
+                <input type="number" id="semester" th:field="*{registrationStudentDTO.semester}">
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.semester')}"
+                     th:errors="*{registrationStudentDTO.semester}"></div>
+            </div>
+            <div>
+                <label for="section">Section:</label>
+                <input type="text" id="section" th:field="*{registrationStudentDTO.section}">
+                <div th:if="${#fields.hasErrors('registrationStudentDTO.section')}"
+                     th:errors="*{registrationStudentDTO.section}"></div>
+            </div>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <div>
+        <a th:href="@{/registerFaculty}">Register As Faculty Instead</a>
+        <br/>
+        <a th:href="@{/login}">Already Have an Account?</a>
+    </div>
+</div>
+</body>
+</html>

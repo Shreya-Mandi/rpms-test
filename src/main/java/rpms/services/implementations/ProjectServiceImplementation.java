@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rpms.dtos.ProjectDTO;
 import rpms.mapper.ProjectMapper;
+import rpms.models.Faculty;
 import rpms.models.Message;
 import rpms.models.Project;
+import rpms.models.Student;
 import rpms.models.enums.Status;
 import rpms.respositories.ProjectRepository;
 import rpms.services.AccountService;
@@ -48,9 +50,6 @@ public class ProjectServiceImplementation implements ProjectService {
     @Override
     public List<ProjectDTO> getProjects(String username) {
         try {
-            if (accountService.isAccountNotPresent(username))
-                return null;
-
             List<Project> projectList;
             if (accountService.isStudent(username)) {
                 projectList = studentService.getProjects(username);
@@ -72,9 +71,38 @@ public class ProjectServiceImplementation implements ProjectService {
     @Override
     public boolean isAccountInProject(String username, Integer projectId) {
         try {
-            List<String> studentUsernames = getStudentNames(projectId);
-            List<String> facultyUsernames = getStudentNames(projectId);
-            return studentUsernames.contains(username) || facultyUsernames.contains(username);
+            if (accountService.isAccountNotPresent(username))
+                return false;
+
+            if (isProjectPresent(projectId)) {
+                List<String> studentUsernames = getProjectRaw(projectId).getStudentList().stream().map(Student::getId).toList();
+                List<String> facultyUsernames = getProjectRaw(projectId).getFacultyList().stream().map(Faculty::getId).toList();
+                return studentUsernames.contains(username) || facultyUsernames.contains(username);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("ProjectServiceImplementation.class");
+            System.out.println("boolean isAccountInProject(String, Integer)");
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isAccountNotInProject(String username, Integer projectId) {
+        try {
+            if (accountService.isAccountNotPresent(username))
+                return true;
+
+            if (isProjectPresent(projectId)) {
+                List<String> studentUsernames = getProjectRaw(projectId).getStudentList().stream().map(Student::getId).toList();
+                List<String> facultyUsernames = getProjectRaw(projectId).getFacultyList().stream().map(Faculty::getId).toList();
+                return !studentUsernames.contains(username) && !facultyUsernames.contains(username);
+            } else {
+                return true;
+            }
         } catch (Exception e) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectServiceImplementation.class");
@@ -166,16 +194,33 @@ public class ProjectServiceImplementation implements ProjectService {
     public boolean saveProject(ProjectDTO projectDTO, List<String> studentUsernames, List<String> facultyUsernames) {
         try {
             Project project = ProjectMapper.mapProjectDTOToProject(projectDTO);
-            for(String username: studentUsernames) {
+            for (String username : studentUsernames) {
                 if (!accountService.isStudent(username))
                     return false;
             }
-            for(String username: facultyUsernames) {
+            for (String username : facultyUsernames) {
                 if (!accountService.isFaculty(username))
                     return false;
             }
-            project.setStudentList(studentService.getStudentsRaw(studentUsernames));
-            project.setFacultyList(facultyService.getFacultyRaw(facultyUsernames));
+
+            List<Student> studentList = studentService.getStudentsRaw(studentUsernames);
+            if (studentList == null || studentList.size() != studentUsernames.size())
+                return false;
+
+            List<Faculty> facultyList = facultyService.getFacultyRaw(facultyUsernames);
+            if (facultyList == null || facultyList.size() != facultyUsernames.size())
+                return false;
+
+            for (Student student : studentList) {
+                student.getProjectList().add(project);
+            }
+            for (Faculty faculty : facultyList) {
+                faculty.getProjectList().add(project);
+            }
+
+            project.setStudentList(studentList);
+            project.setFacultyList(facultyList);
+
             projectRepository.save(project);
             return true;
         } catch (Exception e) {
@@ -191,6 +236,10 @@ public class ProjectServiceImplementation implements ProjectService {
     public boolean deleteProject(Integer projectId) {
         try {
             if (isProjectPresent(projectId)) {
+                projectRepository.findById(projectId).ifPresent(project -> {
+                    project.getStudentList().forEach(student -> student.getProjectList().remove(project));
+                    project.getFacultyList().forEach(faculty -> faculty.getProjectList().remove(project));
+                });
                 projectRepository.deleteById(projectId);
                 return true;
             }

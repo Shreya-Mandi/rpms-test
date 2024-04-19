@@ -21,9 +21,40 @@ Display List -
             View Details - GET /project/{projectId}
 
 Button -
-    Create Project - GET /project/create
+    Create Project - GET /project/create (if not guest)
 
 Links -
     Login - GET /login (if guest)
     Logout - POST /logout (if not guest)
 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<div>
+    <h1>Projects</h1>
+    <div>
+        <div th:if="${projectDTOList.size() == 0}">No Projects to Display!</div>
+        <div th:each="project : ${projectDTOList}">
+            <div th:text="${project.title}"/>
+            <div th:text="${#dates.format(project.startDate, 'dd-MM-YYYY')}"/>
+            <div th:text="${project.endDate != null ? #dates.format(project.endDate, 'dd-MM-YYYY') : 'N/A'}"/>
+            <div th:text="${project.status}"/>
+            <a th:href="@{/project/{projectId}(projectId=${project.id})}">View Details</a>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <div th:if="${!isGuest}">
+            <a th:href="@{/project/create}">Create Project</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" name="logout" value="logout">Logout</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

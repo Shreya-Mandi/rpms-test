@@ -2,6 +2,7 @@ package rpms.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import rpms.models.enums.Status;
 
 import java.util.Date;
@@ -19,9 +20,11 @@ public class Project {
     private String title;
 
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @Column(nullable = false)

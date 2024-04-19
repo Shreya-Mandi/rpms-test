@@ -22,19 +22,12 @@ public class TestController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/")
-    public String test1() {
-        String username = AccountService.getSessionAccount();
-        System.out.println(username);
-        return "index";
-    }
-
-    @GetMapping("/projects/edit")
-    public String test2() {
-        String username = AccountService.getSessionAccount();
-        System.out.println(username);
-        return "index";
-    }
+//    @GetMapping("/")
+//    public String test1() {
+//        String username = AccountService.getSessionAccount();
+//        System.out.println(username);
+//        return "index";
+//    }
 }
 
 /*

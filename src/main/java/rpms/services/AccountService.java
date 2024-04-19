@@ -14,21 +14,7 @@ import rpms.models.Account;
 import java.util.List;
 
 public interface AccountService extends UserDetailsService {
-    static String getSessionAccount() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (!(authentication instanceof AnonymousAuthenticationToken)) {
-                return authentication.getName();
-            }
-            return null;
-        } catch (Exception e) {
-            System.out.println("Something Went Wrong!!");
-            System.out.println("AccountServiceImplementation.class");
-            System.out.println("String getSessionAccount()");
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
+    String getSessionAccount();
 
     boolean isAccountPresent(String username);
 
@@ -47,6 +33,10 @@ public interface AccountService extends UserDetailsService {
     List<StudentDTO> getStudentsPending();
 
     List<FacultyDTO> getFacultyPending();
+
+    List<String> getStudentsAccepted();
+
+    List<String> getFacultyAccepted();
 
     boolean acceptAccount(String username);
 

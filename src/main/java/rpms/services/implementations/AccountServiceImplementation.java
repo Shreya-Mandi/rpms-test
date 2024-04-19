@@ -1,7 +1,10 @@
 package rpms.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +29,6 @@ import java.util.*;
 
 @Service
 public class AccountServiceImplementation implements AccountService {
-
     private final AccountRepository accountRepository;
     private final StudentService studentService;
     private final FacultyService facultyService;
@@ -53,6 +55,23 @@ public class AccountServiceImplementation implements AccountService {
             );
         } else {
             throw new UsernameNotFoundException("Invalid username and password");
+        }
+    }
+
+    @Override
+    public String getSessionAccount() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (!(authentication instanceof AnonymousAuthenticationToken)) {
+                return authentication.getName();
+            }
+            return null;
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("AccountServiceImplementation.class");
+            System.out.println("String getSessionAccount()");
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 
@@ -187,6 +206,34 @@ public class AccountServiceImplementation implements AccountService {
             System.out.println("Something Went Wrong!!");
             System.out.println("AccountServiceImplementation.class");
             System.out.println("List<FacultyDTO> getFacultyPending()");
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<String> getStudentsAccepted() {
+        try {
+            List<Account> accountList = accountRepository.findAllByIsApprovedIsTrueAndTypeIs(AccountType.STUDENT);
+            return accountList.stream().map(Account::getUsername).toList();
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("AccountServiceImplementation.class");
+            System.out.println("List<String> getStudentsAccepted()");
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<String> getFacultyAccepted() {
+        try {
+            List<Account> accountList = accountRepository.findAllByIsApprovedIsTrueAndTypeIs(AccountType.FACULTY);
+            return accountList.stream().map(Account::getUsername).toList();
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("AccountServiceImplementation.class");
+            System.out.println("List<String> getFacultyAccepted()");
             System.out.println(e.getMessage());
             return null;
         }

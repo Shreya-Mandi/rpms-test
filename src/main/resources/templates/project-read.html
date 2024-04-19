@@ -53,3 +53,69 @@ Button -
 Links -
     Projects Dashboard - GET /projects
 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details</title>
+</head>
+<body>
+<div>
+    <div>
+        <div>
+            <h1>Project Details:</h1>
+        </div>
+        <div>
+            <div th:text="${projectDTO.title}"/>
+            <div th:text="${#dates.format(projectDTO.startDate, 'dd-MM-YYYY')}"/>
+            <div th:text="${projectDTO.endDate != null ? #dates.format(projectDTO.endDate, 'dd-MM-YYYY') : 'N/A'}"/>
+            <div th:text="${projectDTO.status}"/>
+        </div>
+    </div>
+    <div>
+        <div>
+            <h1>Student Names:</h1>
+        </div>
+        <div th:each="name : ${studentNames.usernames}">
+            <div th:text="${name}"/>
+        </div>
+    </div>
+    <div>
+        <div>
+            <h1>Faculty Names:</h1>
+        </div>
+        <div th:each="name : ${facultyNames.usernames}">
+            <div th:text="${name}"/>
+        </div>
+    </div>
+
+    <div th:if="${!isGuest}">
+        <div>
+            <h1>Messages:</h1>
+        </div>
+        <div th:if="${messages.size() == 0}">No Messages to Display!</div>
+        <div th:each="message : ${messages}">
+            <div th:text="${message.name}"/>
+            <div th:text="${#dates.format(message.timestamp, 'dd-MM-YYYY HH:mm')}"/>
+            <div th:text="${message.content}"/>
+            <br />
+        </div>
+        <form th:action="@{/project/{projectId}/addMessage(projectId=${projectDTO.id})}" method="post">
+            <div>
+                <label for="content">Content:</label>
+                <input type="text" id="content" name="content" required>
+            </div>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <div>
+        <div th:if="${!isGuest}">
+            <a th:href="@{/project/{projectId}/update(projectId=${projectDTO.id})}">Update Project</a>
+            <br />
+            <a th:href="@{/project/{projectId}/delete(projectId=${projectDTO.id})}">Delete Project</a>
+        </div>
+        <a th:href="@{/projects}">Go Back</a>
+    </div>
+</div>
+</body>
+</html>

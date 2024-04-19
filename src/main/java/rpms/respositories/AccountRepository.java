@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AccountRepository extends JpaRepository<Account, String> {
     List<Account> findAllByIsApprovedIsFalseAndTypeIs(AccountType accountType);
+
+    List<Account> findAllByIsApprovedIsTrueAndTypeIs(AccountType accountType);
 }

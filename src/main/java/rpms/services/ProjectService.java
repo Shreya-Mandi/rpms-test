@@ -13,6 +13,8 @@ public interface ProjectService {
 
     boolean isAccountInProject(String username, Integer projectId);
 
+    boolean isAccountNotInProject(String username, Integer projectId);
+
     boolean isProjectPresent(Integer projectId);
 
     ProjectDTO getProject(Integer projectId);

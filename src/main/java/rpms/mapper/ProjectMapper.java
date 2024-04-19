@@ -20,7 +20,7 @@ public class ProjectMapper {
         project.setTitle(projectDTO.getTitle());
         project.setStatus(projectDTO.getStatus());
         project.setStartDate(projectDTO.getStartDate());
-        project.setEndDate(projectDTO.getStartDate());
+        project.setEndDate(projectDTO.getEndDate());
         project.setStudentList(null);
         project.setFacultyList(null);
         project.setMessageList(null);

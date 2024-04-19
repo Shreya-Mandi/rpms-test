@@ -35,13 +35,17 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/login", "/registerStudent", "/registerFaculty", "/projects").hasAuthority("ROLE_ANONYMOUS") // add css, js? TODO
+                        .requestMatchers("/").permitAll() // TODO add css, js?
+                        .requestMatchers("/login", "/registerStudent", "/registerFaculty").hasAuthority("ROLE_ANONYMOUS")
+                        .requestMatchers("/projects", "/project/{projectId:[0-9]+}").hasAnyAuthority("STUDENT", "FACULTY", "ROLE_ANONYMOUS")
                         .requestMatchers("/project/**").hasAnyAuthority("STUDENT", "FACULTY")
                         .requestMatchers("/adminDashboard/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
-                .formLogin(withDefaults());
+                .formLogin((form) -> form
+                    .loginPage("/login")
+                );
 
         return http.build();
     }

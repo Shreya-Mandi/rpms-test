@@ -23,14 +23,11 @@ public class RegistrationStudentDTO {
     @NotNull(message = "Department can't be empty")
     private Department department;
 
-    @Min(value = 0, message = "Invalid semester")
+    @Min(value = 1, message = "Invalid semester")
     @Max(value = 8, message = "Invalid semester")
-    @Digits(integer = 1, fraction = 0, message = "Invalid semester")
     @NotNull(message = "Semester can't be empty")
     private Integer semester;
 
-    @Size(min = 1, max = 1, message = "Invalid section")
     @Pattern(regexp = "^[a-zA-Z]$", message = "Invalid section")
-    @NotBlank(message = "Section can't be empty")
-    private Character section;
+    private String section;
 }

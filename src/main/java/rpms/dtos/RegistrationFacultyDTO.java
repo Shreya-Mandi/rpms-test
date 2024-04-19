@@ -23,6 +23,6 @@ public class RegistrationFacultyDTO {
     @NotNull(message = "Department can't be empty")
     private Department department;
 
-    @NotBlank(message = "domain can't be empty")
+    @NotBlank(message = "Domain can't be empty")
     private String domain;
 }

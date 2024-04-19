@@ -42,3 +42,53 @@ Display List -
 Links -
     Logout - POST /logout
 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<div>
+    <h1>Admin Dashboard</h1>
+    <div>
+        <div>
+            <h1>Students</h1>
+        </div>
+        <div th:if="${studentDTOList.size() == 0}">No Students to Display!</div>
+        <div th:each="student : ${studentDTOList}">
+            <div th:text="${student.username}"/>
+            <div th:text="${student.firstName}"/>
+            <div th:text="${student.lastName}"/>
+            <div th:text="${student.department}"/>
+            <div th:text="${student.semester}"/>
+            <div th:text="${student.section}"/>
+            <a th:href="@{/adminDashboard/{studentUsername}/accept(studentUsername=${student.username})}">Accept</a>
+            <a th:href="@{/adminDashboard/{studentUsername}/reject(studentUsername=${student.username})}">Reject</a>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <div>
+            <h1>Faculty</h1>
+        </div>
+        <div th:if="${facultyDTOList.size() == 0}">No Faculty to Display!</div>
+        <div th:each="faculty : ${facultyDTOList}">
+            <div th:text="${faculty.username}"/>
+            <div th:text="${faculty.firstName}"/>
+            <div th:text="${faculty.lastName}"/>
+            <div th:text="${faculty.department}"/>
+            <div th:text="${faculty.domain}"/>
+            <a th:href="@{/adminDashboard/{facultyUsername}/accept(facultyUsername=${faculty.username})}">Accept</a>
+            <a th:href="@{/adminDashboard/{facultyUsername}/reject(facultyUsername=${faculty.username})}">Reject</a>
+            <br/>
+        </div>
+    </div>
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" name="logout" value="logout">Logout</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
