@@ -203,26 +203,35 @@ public class ProjectServiceImplementation implements ProjectService {
                     return false;
             }
 
-            List<Student> studentList = studentService.getStudentsRaw(studentUsernames);
-            if (studentList == null || studentList.size() != studentUsernames.size())
-                return false;
+            if (project.getId() != null) {
+                Project oldProject = getProjectRaw(project.getId());
 
-            List<Faculty> facultyList = facultyService.getFacultyRaw(facultyUsernames);
-            if (facultyList == null || facultyList.size() != facultyUsernames.size())
-                return false;
+                List<Student> studentList = oldProject.getStudentList();
+                if (studentList == null || studentList.isEmpty())
+                    return false;
 
-            for (Student student : studentList) {
-                student.getProjectList().add(project);
+                List<Faculty> facultyList = oldProject.getFacultyList();
+                if (facultyList == null || facultyList.isEmpty())
+                    return false;
+
+                for (Student student : studentList) {
+                    student.getProjectList().remove(oldProject);
+                }
+                for (Faculty faculty : facultyList) {
+                    faculty.getProjectList().remove(oldProject);
+                }
+                oldProject.getStudentList().clear();
+                oldProject.getFacultyList().clear();
+
+                oldProject.setTitle(project.getTitle());
+                oldProject.setStartDate(project.getStartDate());
+                oldProject.setEndDate(project.getEndDate());
+                oldProject.setStatus(project.getStatus());
+
+                return helper1(oldProject, studentUsernames, facultyUsernames);
             }
-            for (Faculty faculty : facultyList) {
-                faculty.getProjectList().add(project);
-            }
 
-            project.setStudentList(studentList);
-            project.setFacultyList(facultyList);
-
-            projectRepository.save(project);
-            return true;
+            return helper1(project, studentUsernames, facultyUsernames);
         } catch (Exception e) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectServiceImplementation.class");
@@ -230,6 +239,29 @@ public class ProjectServiceImplementation implements ProjectService {
             System.out.println(e.getMessage());
             return false;
         }
+    }
+
+    private boolean helper1(Project project, List<String> studentUsernames, List<String> facultyUsernames) {
+        List<Student> studentList = studentService.getStudentsRaw(studentUsernames);
+        if (studentList == null || studentList.size() != studentUsernames.size())
+            return false;
+
+        List<Faculty> facultyList = facultyService.getFacultyRaw(facultyUsernames);
+        if (facultyList == null || facultyList.size() != facultyUsernames.size())
+            return false;
+
+        for (Student student : studentList) {
+            student.getProjectList().add(project);
+        }
+        for (Faculty faculty : facultyList) {
+            faculty.getProjectList().add(project);
+        }
+
+        project.setStudentList(studentList);
+        project.setFacultyList(facultyList);
+
+        projectRepository.save(project);
+        return true;
     }
 
     @Override

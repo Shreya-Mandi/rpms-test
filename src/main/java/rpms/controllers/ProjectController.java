@@ -1,13 +1,5 @@
 package rpms.controllers;
 
-/*
-
-GET /project/{projectId}/update
-
-POST /project/{projectId}/update
-
-*/
-
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +51,7 @@ public class ProjectController {
         } else if (accountService.isStudent(sessionUsername) || accountService.isFaculty(sessionUsername)) {
             projectDTOList = projectService.getProjects(sessionUsername);
         } else {
-            System.out.println("Something Went Wrong!!");
-            System.out.println("ProjectController.class 1");
-            System.out.println("displayAllProjects(); GET /projects");
-            return "error";
+            return "redirect:/";
         }
         if (projectDTOList == null) {
             projectDTOList = new ArrayList<>();
@@ -79,7 +68,7 @@ public class ProjectController {
             String sessionUsername = accountService.getSessionAccount();
             if ((sessionUsername == null && projectService.getProject(projectId).getStatus() != Status.PUBLISHED) ||
                     (sessionUsername != null && projectService.isAccountNotInProject(sessionUsername, projectId))) {
-                return "redirect:/projects";
+                return "redirect:/";
             }
 
             ProjectDTO projectDTO = projectService.getProject(projectId);
@@ -91,7 +80,7 @@ public class ProjectController {
             }
 
             List<String> studentNames = projectService.getStudentNames(projectId);
-            if (studentNames == null) {
+            if (studentNames == null || studentNames.isEmpty()) {
                 System.out.println("Something Went Wrong!!");
                 System.out.println("ProjectController.class 2");
                 System.out.println("displayProject(); GET /project/{projectId}");
@@ -99,7 +88,7 @@ public class ProjectController {
             }
 
             List<String> facultyNames = projectService.getFacultyNames(projectId);
-            if (facultyNames == null) {
+            if (facultyNames == null || facultyNames.isEmpty()) {
                 System.out.println("Something Went Wrong!!");
                 System.out.println("ProjectController.class 3");
                 System.out.println("displayProject(); GET /project/{projectId}");
@@ -120,14 +109,14 @@ public class ProjectController {
             }
             return "project-read";
         } else {
-            return "redirect:/projects";
+            return "redirect:/";
         }
     }
 
     @GetMapping("/project/create")
     public String displayProjectCreateForm(Model model) {
         List<String> studentUsernames = accountService.getStudentsAccepted();
-        if (studentUsernames == null) {
+        if (studentUsernames == null || studentUsernames.isEmpty()) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectController.class 1");
             System.out.println("displayProjectCreateForm(); GET /project/create");
@@ -135,7 +124,7 @@ public class ProjectController {
         }
 
         List<String> facultyUsernames = accountService.getFacultyAccepted();
-        if (facultyUsernames == null) {
+        if (facultyUsernames == null || facultyUsernames.isEmpty()) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectController.class 2");
             System.out.println("displayProjectCreateForm(); GET /project/create");
@@ -150,7 +139,6 @@ public class ProjectController {
 
     @PostMapping("/project/create")
     public String createProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult, @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames, @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames, Model model) {
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("projectDTO", projectDTO);
 
@@ -184,25 +172,12 @@ public class ProjectController {
             return "error";
         }
 
-        // this is jugaad
+        // this is jugaad, can't fix, don't change
 
         List<String> studentUsernamesActual = new ArrayList<>();
         List<String> facultyUsernamesActual = new ArrayList<>();
 
-        for (String username : Stream.concat(studentUsernames.getUsernames().stream(), facultyUsernames.getUsernames().stream()).toList()) {
-            if (accountService.isStudent(username) && !studentUsernamesActual.contains(username)) {
-                studentUsernamesActual.add(username);
-            }
-            if (accountService.isFaculty(username) && !facultyUsernamesActual.contains(username)) {
-                facultyUsernamesActual.add(username);
-            }
-        }
-
-        if (accountService.isFaculty(sessionUsername) && !facultyUsernamesActual.contains(sessionUsername)) {
-            facultyUsernamesActual.add(sessionUsername);
-        } else if (accountService.isStudent(sessionUsername) && !studentUsernamesActual.contains(sessionUsername)) {
-            studentUsernamesActual.add(sessionUsername);
-        } else if (!accountService.isFaculty(sessionUsername) && !accountService.isStudent(sessionUsername)) {
+        if (!jugaadHelper(sessionUsername, studentUsernames, facultyUsernames, studentUsernamesActual, facultyUsernamesActual)) {
             System.out.println("Something Went Wrong!!");
             System.out.println("ProjectController.class 4");
             System.out.println("createProject(); POST /project/create");
@@ -216,23 +191,120 @@ public class ProjectController {
             return "error";
         }
 
-        return "redirect:/projects";
+        return "redirect:/";
     }
 
     @GetMapping("/project/{projectId}/update")
     public String displayProjectUpdateForm(@PathVariable Integer projectId, Model model) {
-        return "index";
+        if (projectService.isProjectPresent(projectId) && projectService.isAccountInProject(accountService.getSessionAccount(), projectId)) {
+            List<String> studentUsernames = accountService.getStudentsAccepted();
+            if (studentUsernames == null || studentUsernames.isEmpty()) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 1");
+                System.out.println("displayProjectUpdateForm(); GET /project/{projectId}/update");
+                return "error";
+            }
+
+            List<String> facultyUsernames = accountService.getFacultyAccepted();
+            if (facultyUsernames == null || facultyUsernames.isEmpty()) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 2");
+                System.out.println("displayProjectUpdateForm(); GET /project/{projectId}/update");
+                return "error";
+            }
+
+            List<String> selectedStudentUsernames = projectService.getStudentNames(projectId);
+            if (selectedStudentUsernames == null || selectedStudentUsernames.isEmpty()) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 3");
+                System.out.println("displayProjectUpdateForm(); GET /project/{projectId}/update");
+                return "error";
+            }
+
+            List<String> selectedFacultyUsernames = projectService.getFacultyNames(projectId);
+            if (selectedFacultyUsernames == null || selectedFacultyUsernames.isEmpty()) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 4");
+                System.out.println("displayProjectUpdateForm(); GET /project/{projectId}/update");
+                return "error";
+            }
+
+            model.addAttribute("projectDTO", projectService.getProject(projectId));
+            model.addAttribute("studentUsernames", new UsernamesDTO(studentUsernames));
+            model.addAttribute("selectedStudentUsernames", new UsernamesDTO(selectedStudentUsernames));
+            model.addAttribute("facultyUsernames", new UsernamesDTO(facultyUsernames));
+            model.addAttribute("selectedFacultyUsernames", new UsernamesDTO(selectedFacultyUsernames));
+            return "project-update";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/project/{projectId}/update")
-    public String updateProject(@PathVariable String projectId) {
-        return "index";
+    public String updateProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult, @PathVariable String projectId, @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames, @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("projectDTO", projectDTO);
+
+            List<String> studentUsernamesNew = accountService.getStudentsAccepted();
+            if (studentUsernames == null) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 1");
+                System.out.println("updateProject(); POST /project/{projectId}/update");
+                return "error";
+            }
+
+            List<String> facultyUsernamesNew = accountService.getFacultyAccepted();
+            if (facultyUsernames == null) {
+                System.out.println("Something Went Wrong!!");
+                System.out.println("ProjectController.class 2");
+                System.out.println("updateProject(); POST /project/{projectId}/update");
+                return "error";
+            }
+
+            model.addAttribute("projectDTO", projectDTO);
+            model.addAttribute("studentUsernames", new UsernamesDTO(studentUsernamesNew));
+            model.addAttribute("selectedStudentUsernames", studentUsernames);
+            model.addAttribute("facultyUsernames", new UsernamesDTO(facultyUsernamesNew));
+            model.addAttribute("selectedFacultyUsernames", facultyUsernames);
+            return "project-update";
+        }
+
+        String sessionUsername = accountService.getSessionAccount();
+        if (sessionUsername == null) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("ProjectController.class 3");
+            System.out.println("updateProject(); POST /project/{projectId}/update");
+            return "error";
+        }
+
+        // this is jugaad, can't fix, don't change
+
+        List<String> studentUsernamesActual = new ArrayList<>();
+        List<String> facultyUsernamesActual = new ArrayList<>();
+
+        if (!jugaadHelper(sessionUsername, studentUsernames, facultyUsernames, studentUsernamesActual, facultyUsernamesActual)) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("ProjectController.class 4");
+            System.out.println("updateProject(); POST /project/{projectId}/update");
+            return "error";
+        }
+
+        projectDTO.setId(Integer.parseInt(projectId));
+
+        if (!projectService.saveProject(projectDTO, studentUsernamesActual, facultyUsernamesActual)) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("ProjectController.class 5");
+            System.out.println("updateProject(); POST /project/{projectId}/update");
+            return "error";
+        }
+
+        return "redirect:/project/{projectId}";
     }
 
     @GetMapping("/project/{projectId}/delete")
     public String deleteProject(@PathVariable String projectId) {
         if (projectService.isProjectPresent(Integer.parseInt(projectId)) &&
-                projectService.isAccountInProject(accountService.getSessionAccount(), Integer.parseInt(projectId))) {
+                (projectService.isAccountInProject(accountService.getSessionAccount(), Integer.parseInt(projectId)) ||
+                        accountService.isAdmin(accountService.getSessionAccount()))) {
             if (!projectService.deleteProject(Integer.parseInt(projectId))) {
                 System.out.println("Something Went Wrong!!");
                 System.out.println("ProjectController.class 1");
@@ -240,14 +312,14 @@ public class ProjectController {
                 return "error";
             }
         }
-        return "redirect:/projects";
+        return "redirect:/";
     }
 
     @PostMapping("/project/{projectId}/addMessage")
     public String addMessage(@PathVariable String projectId, @RequestParam String content) {
         if (projectService.isProjectPresent(Integer.parseInt(projectId))) {
             String username = accountService.getSessionAccount();
-            if (projectService.isAccountInProject(username, Integer.parseInt(projectId))) {
+            if (username != null && projectService.isAccountInProject(username, Integer.parseInt(projectId))) {
                 if (!messageService.addMessage(username, Integer.parseInt(projectId), content)) {
                     System.out.println("Something Went Wrong!!");
                     System.out.println("ProjectController.class 1");
@@ -257,38 +329,26 @@ public class ProjectController {
             }
             return "redirect:/project/{projectId}";
         } else {
-            return "redirect:/projects";
+            return "redirect:/";
         }
+    }
+
+    private boolean jugaadHelper(String sessionUsername, UsernamesDTO studentUsernames, UsernamesDTO facultyUsernames, List<String> studentUsernamesActual, List<String> facultyUsernamesActual) {
+        for (String username : Stream.concat(studentUsernames.getUsernames().stream(), facultyUsernames.getUsernames().stream()).toList()) {
+            if (accountService.isStudent(username) && !studentUsernamesActual.contains(username)) {
+                studentUsernamesActual.add(username);
+            }
+            if (accountService.isFaculty(username) && !facultyUsernamesActual.contains(username)) {
+                facultyUsernamesActual.add(username);
+            }
+        }
+
+        if (accountService.isFaculty(sessionUsername) && !facultyUsernamesActual.contains(sessionUsername)) {
+            facultyUsernamesActual.add(sessionUsername);
+        } else if (accountService.isStudent(sessionUsername) && !studentUsernamesActual.contains(sessionUsername)) {
+            studentUsernamesActual.add(sessionUsername);
+        } else return accountService.isFaculty(sessionUsername) || accountService.isStudent(sessionUsername);
+
+        return true;
     }
 }
-
-/*
-
-    @GetMapping("/project/{projectId}/update")
-    public String showUpdateForm(@PathVariable Integer projectId, Model model) {
-        if (!projectService.isProjectPresent(projectId)) {
-            System.out.println("Project Id does not exist!");
-            return "projects-dashboard";
-        }
-        ProjectDTO projectDTO = projectService.getProject(projectId);
-        model.addAttribute("projectDTO", projectDTO);
-        model.addAttribute("studentUsernames", projectService.getStudentNames(projectId));
-        model.addAttribute("facultyUsernames", projectService.getFacultyNames(projectId));
-        return "project-update";
-    }
-
-    @PostMapping("/project/{projectId}/update")
-    public String updateProject(@PathVariable Integer projectId, @ModelAttribute @Valid ProjectDTO projectDTO, BindingResult bindingResult, @RequestParam List<String> studentUsernames, @RequestParam List<String> facultyUsernames) {
-        if (bindingResult.hasErrors()) {
-            return "project-update";
-        }
-        projectDTO.setId(projectId); // TODO check if this is needed (Breakpoint and debug)
-        if (!projectService.saveProject(projectDTO, studentUsernames, facultyUsernames)) {
-            System.out.println("Something Went Wrong!!");
-            System.out.println("ProjectController.class");
-            System.out.println("updateProject(); POST /project/{projectId}/update");
-        }
-        return "redirect:/project/{projectId}";
-    }
-
-*/

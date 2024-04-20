@@ -40,6 +40,7 @@ public class AccountServiceImplementation implements AccountService {
         this.facultyService = facultyService;
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Account> accountOptional = accountRepository.findById(username);
@@ -126,6 +127,20 @@ public class AccountServiceImplementation implements AccountService {
             System.out.println("Something Went Wrong!!");
             System.out.println("AccountServiceImplementation.class");
             System.out.println("boolean isFaculty(String)");
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isAdmin(String username) {
+        try {
+            Optional<Account> accountOptional = accountRepository.findById(username);
+            return accountOptional.filter(account -> account.getType() == AccountType.ADMIN).isPresent();
+        } catch (Exception e) {
+            System.out.println("Something Went Wrong!!");
+            System.out.println("AccountServiceImplementation.class");
+            System.out.println("boolean isAdmin(String)");
             System.out.println(e.getMessage());
             return false;
         }
@@ -266,6 +281,7 @@ public class AccountServiceImplementation implements AccountService {
             Optional<Account> accountOptional = accountRepository.findById(username);
             if (accountOptional.isPresent()) {
                 Account account = accountOptional.get();
+
                 boolean deleted = false;
                 switch (account.getType()) {
                     case STUDENT -> deleted = studentService.deleteStudent(account.getUsername());
