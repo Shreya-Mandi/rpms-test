@@ -44,7 +44,8 @@ Links -
             <div th:text="${project.endDate != null ? #dates.format(project.endDate, 'dd-MM-YYYY') : 'N/A'}"/>
             <div th:text="${project.status}"/>
             <a th:href="@{/project/{projectId}(projectId=${project.id})}">View Details</a>
-            <br/>
+            <br>
+            <br>
         </div>
     </div>
     <div>

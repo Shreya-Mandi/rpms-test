@@ -98,7 +98,7 @@ Links -
             <div th:text="${message.name}"/>
             <div th:text="${#dates.format(message.timestamp, 'dd-MM-YYYY HH:mm')}"/>
             <div th:text="${message.content}"/>
-            <br />
+            <br>
         </div>
         <form th:action="@{/project/{projectId}/addMessage(projectId=${projectDTO.id})}" method="post">
             <div>
@@ -111,7 +111,7 @@ Links -
     <div>
         <div th:if="${!isGuest}">
             <a th:href="@{/project/{projectId}/update(projectId=${projectDTO.id})}">Update Project</a>
-            <br />
+            <br/>
             <a th:href="@{/project/{projectId}/delete(projectId=${projectDTO.id})}">Delete Project</a>
         </div>
         <a th:href="@{/projects}">Go Back</a>
