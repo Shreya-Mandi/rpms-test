@@ -73,20 +73,20 @@ For each field (except department):
             </div>
             <div>
                 <label for="studentUsernames">Student Usernames:</label>
+                <br>
                 <select id="studentUsernames" th:field="*{studentUsernames.usernames}" required multiple>
                     <option th:each="username : ${studentUsernames.usernames}"
                             th:value="${username}"
-                            th:text="${username}"
-                            th:selected="${false}"></option>
+                            th:text="${username}"></option>
                 </select>
             </div>
             <div>
                 <label for="facultyUsernames">Faculty Usernames:</label>
-                <select id="facultyUsernames" th:field="*{{facultyUsernames.usernames}}" required multiple>
+                <br>
+                <select id="facultyUsernames" th:field="*{facultyUsernames.usernames}" required multiple>
                     <option th:each="username : ${facultyUsernames.usernames}"
                             th:value="${username}"
-                            th:text="${username}"
-                            th:selected="${false}"></option>
+                            th:text="${username}"></option>
                 </select>
             </div>
         </div>

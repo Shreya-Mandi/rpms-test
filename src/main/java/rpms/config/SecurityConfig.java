@@ -38,7 +38,8 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll() // TODO add css, js?
                         .requestMatchers("/login", "/registerStudent", "/registerFaculty").hasAuthority("ROLE_ANONYMOUS")
                         .requestMatchers("/projects", "/project/{projectId:[0-9]+}").hasAnyAuthority("STUDENT", "FACULTY", "ROLE_ANONYMOUS")
-                        .requestMatchers("/adminDashboard/**", "/project/{projectId:[0-9]+}/delete").hasAuthority("ADMIN")
+                        .requestMatchers("/adminDashboard/**").hasAuthority("ADMIN")
+                        .requestMatchers("/project/{projectId:[0-9]+}/delete").hasAnyAuthority("ADMIN", "FACULTY", "STUDENT")
                         .requestMatchers("/project/**").hasAnyAuthority("STUDENT", "FACULTY")
                         .anyRequest().authenticated()
                 )

@@ -10,7 +10,7 @@ public class StudentMapper {
         student.setId(registrationStudentDTO.getUsername());
         student.setDepartment(registrationStudentDTO.getDepartment());
         student.setSemester(registrationStudentDTO.getSemester());
-        student.setSection(registrationStudentDTO.getSection().toCharArray()[0]);
+        student.setSection(registrationStudentDTO.getSection().toUpperCase().toCharArray()[0]);
         student.setAccount(null);
         student.setProjectList(null);
         return student;

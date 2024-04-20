@@ -138,7 +138,10 @@ public class ProjectController {
     }
 
     @PostMapping("/project/create")
-    public String createProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult, @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames, @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames, Model model) {
+    public String createProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult,
+                                @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames,
+                                @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames,
+                                Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("projectDTO", projectDTO);
 
@@ -240,7 +243,11 @@ public class ProjectController {
     }
 
     @PostMapping("/project/{projectId}/update")
-    public String updateProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult, @PathVariable String projectId, @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames, @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames, Model model) {
+    public String updateProject(@Valid @ModelAttribute("projectDTO") ProjectDTO projectDTO, BindingResult bindingResult,
+                                @PathVariable String projectId,
+                                @ModelAttribute("studentUsernames") UsernamesDTO studentUsernames,
+                                @ModelAttribute("facultyUsernames") UsernamesDTO facultyUsernames,
+                                Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("projectDTO", projectDTO);
 
