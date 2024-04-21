@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<div>
+    <div>
+        Welcome! This is not supposed to be seen! If you are seeing this, either it's an error or its unimplemented!
+    </div>
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" name="logout" value="logout">Logout</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

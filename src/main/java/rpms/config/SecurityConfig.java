@@ -35,7 +35,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/").permitAll() // TODO add css, js?
+                        .requestMatchers("/", "css/**", "js/**").permitAll()
                         .requestMatchers("/login", "/registerStudent", "/registerFaculty").hasAuthority("ROLE_ANONYMOUS")
                         .requestMatchers("/projects", "/project/{projectId:[0-9]+}").hasAnyAuthority("STUDENT", "FACULTY", "ROLE_ANONYMOUS")
                         .requestMatchers("/adminDashboard/**").hasAuthority("ADMIN")
@@ -45,7 +45,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(withDefaults())
                 .formLogin((form) -> form
-                    .loginPage("/login")
+                        .loginPage("/login")
                 );
 
         return http.build();
